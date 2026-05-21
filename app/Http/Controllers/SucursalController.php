@@ -12,15 +12,15 @@ class SucursalController extends Controller
      */
     public function index()
     {
-        //
+        $sucursals = Sucursal::latest()->paginate(10);
+        return view('sucursals.index', compact('sucursals'));
     }
-
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        return view('sucursals.create');
     }
 
     /**
@@ -28,7 +28,15 @@ class SucursalController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'ciudad'             => 'required|string',
+            'direccion_fisica'   => 'required|string',
+            'telefono_contacto'  => 'required|integer',
+        ]);
+
+        Sucursal::create($request->all());
+
+        return redirect()->route('sucursals.index');
     }
 
     /**
@@ -36,7 +44,7 @@ class SucursalController extends Controller
      */
     public function show(Sucursal $sucursal)
     {
-        //
+        return view('sucursals.show', compact('sucursal'));
     }
 
     /**
@@ -44,7 +52,7 @@ class SucursalController extends Controller
      */
     public function edit(Sucursal $sucursal)
     {
-        //
+        return view('sucursals.edit',compact('sucursal'));
     }
 
     /**
@@ -52,7 +60,14 @@ class SucursalController extends Controller
      */
     public function update(Request $request, Sucursal $sucursal)
     {
-        //
+        $request->validate([
+            'ciudad'             => 'required|string',
+            'direccion_fisica'   => 'required|string',
+            'telefono_contacto'  => 'required|integer',
+        ]);
+        $sucursal->update($request->all());
+        return redirect()->route('sucursals.index');
+
     }
 
     /**
@@ -60,6 +75,8 @@ class SucursalController extends Controller
      */
     public function destroy(Sucursal $sucursal)
     {
-        //
+        $sucursal->delete();
+        return redirect()->route('sucursals.index')->with('success','Sucursal Eliminada');
+
     }
 }
